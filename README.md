@@ -5,7 +5,7 @@ Baseline tests for for creating a queue module for forerunner. Passing these tes
 
 `npm install forerunner-queue-tests`
 
-useage
+usage
 ---
 
 There is no one way to use these tests, they are kept simple so that they can be used with just about any custom module. This example is just one way to get your tests setup.
