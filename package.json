@@ -1,6 +1,12 @@
 {
   "name": "forerunner-queue-tests",
   "version": "0.0.2",
+  "description": "Test suite for custom forerunner queues",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dropdownmenu/forerunner-queue-tests.git"
+  },
   "dependencies": {
     "vows": "0.7.x",
     "async": "0.2.x"
