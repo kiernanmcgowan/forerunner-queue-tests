@@ -1,8 +1,8 @@
 {
   "name": "forerunner-queue-tests",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "dependencies": {
     "vows": "0.7.x",
-    "async": "~0.2.9"
+    "async": "0.2.x"
   }
 }
