@@ -12,6 +12,17 @@ var sampleData = createTestData(10);
 function testModule(queueObject, testCallbacks) {
   var tests = vows.describe('Queue')
   .addBatch({
+    'Emptying the queue': {
+      topic: function() {
+        queueObject.empty(this.callback);
+      },
+
+      'does not error': function(err) {
+        assert.isUndefined(err);
+      }
+    }
+  })
+  .addBatch({
     'Pushing jobs': {
       topic: function() {
         async.each(sampleData, function(job, cb) {
@@ -76,8 +87,65 @@ function testModule(queueObject, testCallbacks) {
         }
       }
     }
-  }).run({}, testCallbacks);
+  })
+  .addBatch({
+    'Pushing via a requeue': {
+      topic: function() {
+        var self = this;
+        // empty the queue first
+        queueObject.empty(function(err) {
+          if (err) {
+            self.callback(err);
+          }
+          async.each(sampleData, function(job, cb) {
+            queueObject.requeue(job.id, job.type, job.data, cb);
+          }, self.callback);
+        });
+      },
 
+      'works': function(err) {
+        assert.isUndefined(err);
+      },
+
+      'and when iterated over': {
+        topic: function() {
+          var self = this;
+          var pulledData = [];
+          queueObject.each(10, function(id, type, data) {
+            pulledData.push({
+              id: id,
+              type: type,
+              data: data
+            });
+          }, function(err) {
+            self.callback(err, pulledData);
+          });
+        },
+
+        'all pushed jobs are present': function(err, pulledData) {
+          assert.isNull(err);
+          assert.equal(pulledData.length, 10);
+        },
+
+        'job data is peserved': function(err, pulledData) {
+          // since the queue does not have to be FIFO do a n^2 search :/
+          for (var i = 0; i < pulledData.length; i++) {
+            var pulledDataFoundInSampleData = false;
+            for (var j = 0; j < sampleData.length; j++) {
+              if (sampleData[j].id === pulledData[i].id) {
+                assert.deepEqual(sampleData[j], pulledData[i]);
+                pulledDataFoundInSampleData = true;
+                break;
+              }
+            }
+            assert.isTrue(pulledDataFoundInSampleData);
+          }
+        }
+      }
+
+    }
+  })
+  .run({reporter: require('vows/lib/vows/reporters/spec')}, testCallbacks);
 }
 module.exports = testModule;
 
