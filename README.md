@@ -1,6 +1,8 @@
 forerunner-queue-tests
 ===
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/kiernanmcgowan/forerunner-queue-tests.svg)](https://greenkeeper.io/)
+
 Baseline tests for for creating a queue module for forerunner. Passing these tests will help to make sure that your custom queue module will work to the expectations of the forerunner manager.
 
 `npm install forerunner-queue-tests`
